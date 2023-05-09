@@ -29,7 +29,7 @@ def main():
     sensor_y = mirrored_interval(ping_interval, n_sensor_positions)
     centers = [np.array([0, y]) for y in sensor_y]
     beam_width_m = math.tan(math.radians(beam_width)) * ground_range
-    array_length = 0.5 # [m]
+    array_length = 0.4 # [m]
     nearfield_range = array_length**2 / (4 * sound_velocity / frequency / 1000)# D**2
     # D: length
     # F: frequency
@@ -47,7 +47,7 @@ def main():
         ax.add_patch(p)
     ax.scatter(*np.array(centers).T, label=f'Ping interval ({ping_interval:.2f} m)')
     # ax.axis([-10, ground_range + 10, -1, 1])
-    ax.axis([-10, 100, -1, 1])
+    ax.axis([-10, 120, -1, 1])
     ax.axvline(x=0, color='r', linestyle='--', label='Sensor track')
     ax.axvline(x=nearfield_range, color='blue', linewidth=0.4, linestyle='--', label='Near<->far field transition')
     ax.axvline(x=nadir_range, color='brown', linewidth=0.4, linestyle='--', label='Nadir')
