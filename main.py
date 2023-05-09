@@ -37,22 +37,33 @@ def main():
         ax.add_patch(p)
     for p in left_polygons:
         ax.add_patch(p)
-    ax.scatter(*np.array(centers).T)
-    ax.axis([-10, ground_range+10, -1, 1])
+    ax.scatter(*np.array(centers).T, label=f'Ping interval ({ping_interval:.2f} m)')
+    ax.axis([-10, ground_range + 10, -1, 1])
 
-    ax.axvline(x=0, color='r', linestyle='--', label='Track')
+    ax.axvline(x=0, color='r', linestyle='--', label='Sensor track')
 
     ax.set_xlabel("Cross-track [m]")
     ax.set_ylabel("Along-track [m]")
     # ax.set_title("Detection Range")
     # ax.set_aspect('equal')
+    ax.legend()
     st.pyplot(fig)
-    resolution = beam_width_m * 2 * 0.9
+    resolution = beam_width_m * 2
     if ping_interval > resolution:
         st.text(f'Along-track resolution is limited by ping interval.')
         st.text(f'Resolution by ping interval: {ping_interval:.2g}')
     else:
-        st.text(f'Along-track resolution at 90% of range: {resolution :.2g} m')
+        st.text(f'Along-track resolution at 90% of range: {resolution * 0.9 :.2g} m')
+
+    fig2, ax2 = plt.subplots()
+    lc = LineCollection([[(0, 0), (ground_range, resolution)]], linewidth=3.0, )
+    ax2.axis([0, ground_range + 10, 0, resolution*1.1])
+    ax2.add_collection(lc)
+    ax2.set_title("Resolution over distance")
+    ax2.set_xlabel("Cross-track [m]")
+    ax2.set_ylabel("Across track resolution [m]")
+    st.pyplot(fig2)
+
 
 def get_input():
     range = st.slider("(ground) Range (per channel) [m]", 0.0, 200.0, 70.0, step=0.5)
